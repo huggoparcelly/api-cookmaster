@@ -12,13 +12,10 @@ const jwtConfig = {
 
 module.exports = async (body) => {
   const { email, password } = body;
-
   const validateUser = await middlewares.isValidUser(email, password);
-
   if (validateUser.message) return validateUser;
 
   const findedUser = await ModelUser.findUserToLogin(email, password);
-  if (!findedUser) return null;
   
   const payload = { ...findedUser };
   const token = jwt.sign(payload, SECRET, jwtConfig);

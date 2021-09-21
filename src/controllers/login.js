@@ -1,12 +1,7 @@
 const ServiceUser = require('../services');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
   const token = await ServiceUser.login(req.body);
-  if (!token) {
-    const err = new Error('Incorrect username or password');
-    err.statusCode = 401;
-    return next(err);
-  }
 
   if (token.message) {
     return res.status(token.code).json({ message: token.message });
