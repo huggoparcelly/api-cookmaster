@@ -15,7 +15,9 @@ app.get('/', (request, response) => {
 
 app.post('/users', routes.createUsers);
 app.post('/login', routes.login);
-app.post('/recipes', middlewares.validateJWT, routes.recipes);
+
+app.post('/recipes', middlewares.validateJWT, routes.createRecipe);
+app.get('/recipes', routes.getRecipes);
 
 app.use(middlewares.error);
 

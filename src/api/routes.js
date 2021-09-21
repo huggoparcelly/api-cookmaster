@@ -1,9 +1,11 @@
 const createUsers = require('../controllers/createUser');
 const login = require('../controllers/login');
-const recipes = require('../controllers/createRecipe');
+const createRecipe = require('../controllers/createRecipe');
+const getRecipes = require('../controllers/getRecipes');
 
 module.exports = { 
   createUsers,
   login,
-  recipes,
+  createRecipe,
+  getRecipes,
 };
