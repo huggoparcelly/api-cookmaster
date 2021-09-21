@@ -1,4 +1,4 @@
-const ServiceUser = require('../services/createUser');
+const ServiceUser = require('../services');
 const middlewares = require('../middlewares');
 
 module.exports = async (req, res, next) => {

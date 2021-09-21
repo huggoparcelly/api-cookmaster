@@ -5,7 +5,7 @@ const validation = (body) =>
   Joi.object({
     name: Joi.string().required(),
     email: Joi.string().email().required(),
-    password: Joi.required(),
+    password: Joi.string().required(),
   }).validate(body);
 
 const verifyEmail = async (email) => {

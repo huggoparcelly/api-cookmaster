@@ -13,4 +13,4 @@ const registerUser = async (body) => {
   return user;
 };
 
-module.exports = { registerUser };
+module.exports = registerUser;

@@ -17,7 +17,18 @@ const findUserByEmail = async (email) => {
   return { _id, name, email, role };
 };
 
+const findUserToLogin = async (email, password) => {
+  const db = await connect();
+  const findedUser = await db.collection('users').findOne({ email, password });
+  
+  if (!findedUser) return null;
+  
+  const { _id, role } = findedUser;
+  return { _id, email, role };
+};
+
 module.exports = {
   registerUser,
   findUserByEmail,
+  findUserToLogin,
 };

@@ -14,7 +14,7 @@ app.get('/', (request, response) => {
 // Não remover esse end-point, ele é necessário para o avaliador
 
 app.post('/users', routes.createUsers);
-// app.post('/login', routes.login);
+app.post('/login', routes.login);
 
 app.use(middlewares.error);
 
