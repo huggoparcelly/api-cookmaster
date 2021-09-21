@@ -6,11 +6,11 @@ const middlewares = require('../middlewares');
 const SECRET = 'minhasenhasecreta';
 
 const jwtConfig = {
-  expiresIn: '1h',
+  expiresIn: '1d',
   algorithm: 'HS256',
 };
 
-const login = async (body) => {
+module.exports = async (body) => {
   const { email, password } = body;
 
   const validateUser = await middlewares.isValidUser(email, password);
@@ -25,5 +25,3 @@ const login = async (body) => {
   
   return token;
 };
-
-module.exports = login;

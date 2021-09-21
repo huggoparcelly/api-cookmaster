@@ -1,7 +1,7 @@
 const ModelUser = require('../models/user');
 const middlewares = require('../middlewares');
 
-const registerUser = async (body) => {
+module.exports = async (body) => {
   const { name, email, password } = body;
   
   const verifyEmail = await middlewares.verifyEmail(email);
@@ -12,5 +12,3 @@ const registerUser = async (body) => {
   const user = await ModelUser.registerUser(name, email, password, role);
   return user;
 };
-
-module.exports = registerUser;
