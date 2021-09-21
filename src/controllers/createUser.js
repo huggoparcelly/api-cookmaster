@@ -6,6 +6,7 @@ module.exports = async (req, res, next) => {
 
   if (error) return next(error);
   const user = await ServiceUser.registerUser(req.body);
+  
   if (user.message) return res.status(user.statusCode).json({ message: user.message });
   
   return res.status(201).json({ user });

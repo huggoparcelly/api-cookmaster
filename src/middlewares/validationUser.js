@@ -1,10 +1,6 @@
 const Joi = require('joi');
 const ModelUser = require('../models/user');
 
-// campo nome, email e senha obrigatorio - Invalid entrie. Try again
-// email valido @ .com - Invalid entrie. Try again
-// email unico - findUserByEmail email - Email already registered
-
 const validation = (body) => 
   Joi.object({
     name: Joi.string().required(),
