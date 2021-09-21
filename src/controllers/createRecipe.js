@@ -2,7 +2,6 @@ const Service = require('../services');
 const middlewares = require('../middlewares');
 
 module.exports = async (req, res, next) => {
-  // validações
   const { error } = middlewares.validateRecipe(req.body);
   if (error) return next(error);
   

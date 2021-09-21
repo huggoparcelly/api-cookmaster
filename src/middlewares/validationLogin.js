@@ -5,7 +5,7 @@ const error = {
 
 const code = 401;
 
-const isValidUser = async (email, password) => {
+module.exports = async (email, password) => {
   const REGEX_EMAIL = /\S+@\S+\.\S+/;
 
   if (!email || !password) {
@@ -18,5 +18,3 @@ const isValidUser = async (email, password) => {
  
   return {};
 };
-
-module.exports = { isValidUser };
