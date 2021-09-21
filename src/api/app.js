@@ -19,6 +19,7 @@ app.post('/login', routes.login);
 app.post('/recipes', middlewares.validateJWT, routes.createRecipe);
 app.get('/recipes', routes.getRecipes);
 app.get('/recipes/:id', routes.getRecipesById);
+app.put('/recipes/:id', middlewares.validateJWT, routes.updateRecipe);
 
 app.use(middlewares.error);
 
