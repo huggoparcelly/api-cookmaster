@@ -62,6 +62,12 @@ const updateImg = async (id, path) => {
   return recipe;
 };
 
+const getImg = async (id) => {
+  const { image } = await getRecipesById(id);
+
+  return image;
+};
+
 module.exports = {
   registerRecipe,
   getRecipes,
@@ -69,4 +75,5 @@ module.exports = {
   updateRecipe,
   deleteRecipe,
   updateImg,
+  getImg,
 };

@@ -38,6 +38,8 @@ app.put('/recipes/:id', middlewares.validateJWT, routes.updateRecipe);
 app.delete('/recipes/:id', middlewares.validateJWT, routes.deleteRecipe);
 app.put('/recipes/:id/image', middlewares.validateJWT, upload.single('image'), routes.updateImg);
 
+app.get('/images/:id', routes.getImg);
+
 app.use(middlewares.error);
 
 module.exports = app;
