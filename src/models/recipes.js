@@ -63,8 +63,12 @@ const updateImg = async (id, path) => {
 };
 
 const getImg = async (id) => {
+  console.log(id);
+  if (!ObjectId.isValid(id)) {
+    return null;
+  }
   const { image } = await getRecipesById(id);
-
+  
   return image;
 };
 
