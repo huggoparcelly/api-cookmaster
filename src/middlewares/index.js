@@ -1,5 +1,5 @@
 const error = require('./error');
-const { validation, verifyEmail } = require('./validationUser');
+const { validation, verifyEmail, verifyAdmin } = require('./validationUser');
 const isValidUser = require('./validationLogin');
 const validateRecipe = require('./validationRecipe');
 const validateJWT = require('./validateJWT');
@@ -11,4 +11,5 @@ module.exports = {
   isValidUser,
   validateRecipe,
   validateJWT,
+  verifyAdmin,
 };

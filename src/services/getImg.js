@@ -5,5 +5,6 @@ module.exports = async (id) => {
 
   const image = await ModelRecipes.getImg(newId);
 
-  return image;
+  const newImage = image.replace('localhost:3000', '');
+  return newImage;
 };

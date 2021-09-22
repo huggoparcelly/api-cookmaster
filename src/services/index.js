@@ -7,6 +7,7 @@ const updateRecipe = require('./updateRecipe');
 const deleteRecipe = require('./deleteRecipe');
 const updateImg = require('./updateImg');
 const getImg = require('./getImg');
+const createAdmin = require('./createAdmin');
 
 module.exports = {
   registerUser,
@@ -18,4 +19,5 @@ module.exports = {
   deleteRecipe,
   updateImg,
   getImg,
+  createAdmin,
 };

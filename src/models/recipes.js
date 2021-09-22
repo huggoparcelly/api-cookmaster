@@ -48,14 +48,14 @@ const deleteRecipe = async (id) => {
   await db.collection('recipes').deleteOne({ _id: new ObjectId(id) });
 };
 
-const updateImg = async (id, path) => {
+const updateImg = async (id, url) => {
   if (!ObjectId.isValid(id)) {
     return null;
   }
   
   const db = await connect();
   await db.collection('recipes')
-    .updateOne({ _id: new ObjectId(id) }, { $set: { image: path } });
+    .updateOne({ _id: new ObjectId(id) }, { $set: { image: url } });
 
   const recipe = await getRecipesById(id);
 
@@ -63,11 +63,14 @@ const updateImg = async (id, path) => {
 };
 
 const getImg = async (id) => {
-  console.log(id);
   if (!ObjectId.isValid(id)) {
     return null;
   }
-  const { image } = await getRecipesById(id);
+
+  const response = await getRecipesById(id);
+  if (!response) return null;
+
+  const { image } = response;
   
   return image;
 };
