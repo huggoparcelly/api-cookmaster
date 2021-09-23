@@ -2,23 +2,22 @@ const router = require('express').Router();
 const middlewares = require('../middlewares');
 const upload = require('../middlewares/upload');
 
-const createRecipe = require('../controllers/createRecipe');
-const getRecipes = require('../controllers/getRecipes');
-const getRecipesById = require('../controllers/getRecipesById');
-const updateRecipe = require('../controllers/updateRecipe');
-const deleteRecipe = require('../controllers/deleteRecipe');
-const updateImg = require('../controllers/updateImg');
-// const getImg = require('../controllers/getImg');
+const { 
+  createRecipe, 
+  getRecipes, 
+  getRecipeById, 
+  updateRecipe,
+  addImage,
+  deleteRecipe,
+} = require('../controllers/recipesController');
 
 router.post('/', middlewares.validateJWT, createRecipe);
 router.get('/', getRecipes);
 
-router.get('/:id', getRecipesById);
+router.get('/:id', getRecipeById);
 router.put('/:id', middlewares.validateJWT, updateRecipe);
 router.delete('/:id', middlewares.validateJWT, deleteRecipe);
 
-router.put('/:id/image', middlewares.validateJWT, upload, updateImg);
-
-// router.get('/images/:id', getImg);
+router.put('/:id/image', middlewares.validateJWT, upload, addImage);
 
 module.exports = router;

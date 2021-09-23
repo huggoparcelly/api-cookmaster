@@ -1,7 +1,7 @@
-const ServiceUser = require('../services');
+const login = require('../services/loginService');
 
 module.exports = async (req, res) => {
-  const token = await ServiceUser.login(req.body);
+  const token = await login(req.body);
 
   if (token.message) {
     return res.status(token.code).json({ message: token.message });
