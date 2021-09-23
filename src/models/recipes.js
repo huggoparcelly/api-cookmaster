@@ -62,19 +62,6 @@ const updateImg = async (id, url) => {
   return recipe;
 };
 
-const getImg = async (id) => {
-  if (!ObjectId.isValid(id)) {
-    return null;
-  }
-
-  const response = await getRecipesById(id);
-  if (!response) return null;
-
-  const { image } = response;
-  
-  return image;
-};
-
 module.exports = {
   registerRecipe,
   getRecipes,
@@ -82,5 +69,4 @@ module.exports = {
   updateRecipe,
   deleteRecipe,
   updateImg,
-  getImg,
 };

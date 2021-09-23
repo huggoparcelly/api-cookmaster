@@ -1,4 +1,4 @@
-const ModelAdmin = require('../models/admin');
+const ModelUser = require('../models/user');
 const middlewares = require('../middlewares');
 
 module.exports = async (body, token) => {
@@ -8,7 +8,7 @@ module.exports = async (body, token) => {
   if (verifyAdmin) return verifyAdmin;
 
   const role = 'admin';
-  const admin = await ModelAdmin.createAdmin(name, email, password, role);
+  const admin = await ModelUser.registerUser(name, email, password, role);
   
   return admin;
 };

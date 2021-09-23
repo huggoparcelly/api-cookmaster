@@ -1,6 +1,6 @@
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
-const multer = require('multer');
 
 const routes = require('./routes');
 const middlewares = require('../middlewares');
@@ -14,33 +14,19 @@ app.get('/', (request, response) => {
 });
 // Não remover esse end-point, ele é necessário para o avaliador
 
-app.use(express.static(`${__dirname}/src/uploads`));
+app.use('/users', routes.users);
+app.use('/login', routes.login);
+app.use('/recipes', routes.recipes);
 
-const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, 'src/uploads/');
-  },
-  filename: (req, file, callback) => {
-    const { id } = req.params;
-    callback(null, `${id}.jpeg`);
-  },
-});
+/**
+  feito com ajuda
+ * fontes: 
+ * https://qastack.com.br/programming/15772394/how-to-upload-display-and-save-images-using-node-js-and-express
+ * https://devpleno.com/multer-upload-de-imagens-com-nodejs-e-express
+ *  */ 
 
-const upload = multer({ storage });
+app.use('/images', express.static(path.join(__dirname, '..', 'uploads')));
 
-app.post('/users', routes.createUsers);
-app.post('/login', routes.login);
-
-app.post('/recipes', middlewares.validateJWT, routes.createRecipe);
-app.get('/recipes', routes.getRecipes);
-app.get('/recipes/:id', routes.getRecipesById);
-app.put('/recipes/:id', middlewares.validateJWT, routes.updateRecipe);
-app.delete('/recipes/:id', middlewares.validateJWT, routes.deleteRecipe);
-
-app.get('/images/:id', routes.getImg);
-app.put('/recipes/:id/image', middlewares.validateJWT, upload.single('image'), routes.updateImg);
-
-app.post('/users/admin', routes.createAdmin);
 app.use(middlewares.error);
 
 module.exports = app;

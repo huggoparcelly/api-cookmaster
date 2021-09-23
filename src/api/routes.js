@@ -1,23 +1,9 @@
-const createUsers = require('../controllers/createUser');
-const login = require('../controllers/login');
-const createRecipe = require('../controllers/createRecipe');
-const getRecipes = require('../controllers/getRecipes');
-const getRecipesById = require('../controllers/getRecipesById');
-const updateRecipe = require('../controllers/updateRecipe');
-const deleteRecipe = require('../controllers/deleteRecipe');
-const updateImg = require('../controllers/updateImg');
-const getImg = require('../controllers/getImg');
-const createAdmin = require('../controllers/createAdmin');
+const users = require('../routes/users');
+const login = require('../routes/login');
+const recipes = require('../routes/recipes');
 
-module.exports = { 
-  createUsers,
+module.exports = {
+  users,
   login,
-  createRecipe,
-  getRecipes,
-  getRecipesById,
-  updateRecipe,
-  deleteRecipe,
-  updateImg,
-  getImg,
-  createAdmin,
+  recipes,
 };
