@@ -199,10 +199,220 @@ describe('POST /recipes', () => {
 });
 
 // getRecipe
-// describe('GET /recipes', () => { });
+describe('GET /recipes', () => { 
 
-// // getRecipeByid
-// describe('GET /recipes/id', () => { });
+  let connectionMock;
+
+  before(async() => {
+    connectionMock = await getConnection();
+    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+  });
+
+  after( async () => {
+    MongoClient.connect.restore();
+  });
+
+  describe('É possível listar as receitas quando não estiver autenticado', () => {
+    let response;
+
+    before(async () => {
+      response = await chai.request(app).get('/recipes')
+    });
+
+    it('retorna código de status 200', () => {
+      expect(response).to.have.status(200);
+    });
+
+    it('retorna um array no body', () => {
+      expect(response.body).to.be.an('array');
+    });
+
+    it('array de resposta possui objetos', () => {
+      expect(response.body[0]).to.be.an('object')
+    });
+
+    it('o objeto possui as propriedades "name", "ingredients", "preparation", "userId", "_id"', 
+      () => {
+        expect(response.body[0])
+          .to.have.all.keys(["name", "ingredients", "preparation", "userId", "_id"])
+     });
+
+  });
+
+  describe('É possível listar as receitas estando autenticado', () => {
+    let response;
+    let token;
+
+    const payloadOk = {
+      email: "joão@email.com",
+      password: "12345678"
+    }
+
+    const payloadUser = {
+      name: 'João da Silva',
+      email: "joão@email.com",
+      password: "12345678"
+    }
+    
+    before(async () => {
+      await chai.request(app).post('/users').send(payloadUser)
+      const login = await chai.request(app).post('/login').send(payloadOk)
+      token = login.body.token;
+      response = await chai.request(app)
+      .get('/recipes')
+      .set('authorization', token)
+    });
+
+    it('retorna código de status 200', () => {
+      expect(response).to.have.status(200);
+    });
+
+    it('retorna um array no body', () => {
+      expect(response.body).to.be.an('array');
+    });
+
+    it('array de resposta possui objetos', () => {
+      expect(response.body[0]).to.be.an('object')
+    });
+
+    it('o objeto possui as propriedades "name", "ingredients", "preparation", "userId", "_id"', 
+      () => {
+        expect(response.body[0])
+          .to.have.all.keys(["name", "ingredients", "preparation", "userId", "_id"])
+     });
+
+  })
+});
+
+// getRecipeByid
+describe('GET /recipes/id', () => {
+  let connectionMock;
+  let idRecipe;
+  
+  const users = [
+    { name: 'admin', email: 'root@email.com', password: 'admin', role: 'admin' }
+  ];
+
+  const payloadRecipe = { 
+    name: "Frango delicioso",
+    ingredients: "Frango, sazon",
+    preparation: "10 minutos no forno"
+  }
+
+  before(async() => {
+    connectionMock = await getConnection();
+    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+    const db = connectionMock.db('Cookmaster');
+    await db.collection('users').insertMany(users);
+
+    const login = await chai.request(app).post('/login')
+      .send({
+      email: 'root@email.com',
+      password: 'admin'
+      });
+    const token = login.body.token;
+    
+    const newRecipe = await chai.request(app).post('/recipes')
+        .send(payloadRecipe)
+        .set('authorization', token)
+    idRecipe = newRecipe.body.recipe._id
+  });
+
+  after( async () => {
+    MongoClient.connect.restore();
+  });
+
+  describe('É possível listar uma receita quando não estiver autenticado', () => {
+    let response;
+
+    before(async () => {
+      response = await chai.request(app).get(`/recipes/${idRecipe}`)
+    });
+
+    it('retorna código de status 200', () => {
+      expect(response).to.have.status(200);
+    });
+
+    it('retorna um objeto no body', () => {
+      expect(response.body).to.be.an('object');
+    });
+
+    it('o objeto possui as propriedades "name", "ingredients", "preparation", "userId", "_id"', 
+      () => {
+        expect(response.body)
+          .to.have.all.keys(["name", "ingredients", "preparation", "userId", "_id"])
+     });
+  });
+
+  describe('É possível listar uma receita estando autenticado', () => {
+    let response;
+    let tokenUser;
+
+    const payloadOk = {
+      email: "joão@email.com",
+      password: "12345678"
+    }
+
+    const payloadUser = {
+      name: 'João da Silva',
+      email: "joão@email.com",
+      password: "12345678"
+    }
+    
+    before(async () => {
+      await chai.request(app).post('/users').send(payloadUser)
+      const login = await chai.request(app).post('/login').send(payloadOk)
+      tokenUser = login.body.token;
+      response = await chai.request(app)
+      .get(`/recipes/${idRecipe}`)
+      .set('authorization', tokenUser)
+    });
+
+    before(async () => {
+      await chai.request(app).post('/login').send()
+      response = await chai.request(app).get(`/recipes/${idRecipe}`)
+    });
+
+    it('retorna código de status 200', () => {
+      expect(response).to.have.status(200);
+    });
+
+    it('retorna um objeto no body', () => {
+      expect(response.body).to.be.an('object');
+    });
+
+    it('o objeto possui as propriedades "name", "ingredients", "preparation", "userId", "_id"', 
+      () => {
+        expect(response.body)
+          .to.have.all.keys(["name", "ingredients", "preparation", "userId", "_id"])
+     });
+  });
+
+  describe('Não é possível listar uma receita que não existe', () => {
+    let response;
+    const idWrong = 1234567897;
+    before(async () => {
+      response = await chai.request(app).get(`/recipes/${idWrong}`)
+    });
+
+    it('retorna código de status 404', () => {
+      expect(response).to.have.status(404);
+    });
+
+    it('retorna um objeto no body', () => {
+      expect(response.body).to.be.an('object');
+    });
+
+    it('objeto de resposta possui uma propriedade "message"', () => {
+      expect(response.body).to.have.property('message');
+    });
+
+    it('a propriedade "message" tem o valor "recipe not found"', 
+      () => {
+        expect(response.body.message).to.be.equal("recipe not found")
+     });
+  });
+ });
 
 // // updateRecipe
 // describe('PUT /recipes/id', () => { });
