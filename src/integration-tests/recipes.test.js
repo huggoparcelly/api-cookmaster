@@ -712,7 +712,79 @@ describe('DELETE /recipes/id', () => {
   
 });
 
+// addImage
+describe('PUT /recipes/id/image', () => {
+  let connectionMock;
+  let idRecipe;
+  let tokenAdmin;
+  
+  const users = [
+    { name: 'admin', email: 'root@email.com', password: 'admin', role: 'admin' }
+  ];
 
-// // addImage
-// describe('PUT /recipes/id/image', () => { });
+  const adminLogin = {
+    email: 'root@email.com',
+    password: 'admin'
+  }
+  
+  const payloadRecipe = { 
+    name: "Frango delicioso",
+    ingredients: "Frango, sazon",
+    preparation: "10 minutos no forno"
+  }
+
+  before(async() => {
+    connectionMock = await getConnection();
+    sinon.stub(MongoClient, 'connect').resolves(connectionMock);
+    const db = connectionMock.db('Cookmaster');
+
+    await db.collection('users').insertMany(users);
+
+    const login = await chai.request(app).post('/login').send(adminLogin);
+    tokenAdmin = login.body.token;
+    
+    const newRecipe = await chai.request(app).post('/recipes')
+        .send(payloadRecipe)
+        .set('authorization', tokenAdmin)
+    idRecipe = newRecipe.body.recipe._id
+  });
+
+  after( async () => {
+    MongoClient.connect.restore();
+  });
+
+  describe('Quando o usuário não está autenticado', () => {
+    let response;
+
+    before(async () => {
+      response = await chai.request(app).put(`/recipes/${idRecipe}/image`)
+    });
+
+    it('retorna código de status 401', () => {
+      expect(response).to.have.status(401);
+    });
+
+    it('retorna um objeto no body', () => {
+      expect(response.body).to.be.an('object');
+    });
+
+    it('objeto de resposta possui uma propriedade "message"', () => {
+      expect(response.body).to.have.property('message');
+    });
+
+    it('a propriedade "message" tem o valor "missing auth token"', 
+      () => {
+        expect(response.body.message).to.be.equal("missing auth token")
+     });
+  })
+
+  // describe('Quando o usuário está autenticado', () => {
+    
+  // })
+
+  // describe('Quando o admin está autenticado', () => {
+    
+  // })
+  
+ });
 
