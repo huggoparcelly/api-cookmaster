@@ -90,7 +90,6 @@ Para esse projeto, foi desenvolvido as seguintes habilidades
   }
   ```
 
-
 ### Endpoint para o login de usuários
 
 - A rota é (`/login`).
